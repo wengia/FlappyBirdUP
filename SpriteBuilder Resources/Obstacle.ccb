@@ -654,14 +654,6 @@
 				<array>
 					<dict>
 						<key>name</key>
-						<string>visible</string>
-						<key>type</key>
-						<string>Check</string>
-						<key>value</key>
-						<false/>
-					</dict>
-					<dict>
-						<key>name</key>
 						<string>name</string>
 						<key>type</key>
 						<string>StringSimple</string>
@@ -675,8 +667,8 @@
 						<string>Position</string>
 						<key>value</key>
 						<array>
-							<real>-51.999996185302734</real>
-							<real>494</real>
+							<real>-50</real>
+							<real>810</real>
 							<integer>0</integer>
 							<integer>0</integer>
 							<integer>0</integer>

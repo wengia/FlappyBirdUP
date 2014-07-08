@@ -64,6 +64,7 @@ static const CGFloat maximumYPositionTopPipe = maximumYPositionBottomPipe - pipe
     _topPipe.physicsBody.sensor = true;
     _bottomPipe.physicsBody.sensor = true;
     _greenMushroom.physicsBody.sensor = true;
+    _greenMushroom.visible = false;
 }
 
 @end

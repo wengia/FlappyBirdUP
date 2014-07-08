@@ -39,6 +39,8 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     
     NSTimeInterval _weaponCountDown;
     bool _equipWeapon;
+    
+    CCParticleSystem *_fire;
 }
 
 - (void)didLoadFromCCB {
@@ -63,6 +65,7 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     // Init scrolling speed
     _scrollSpeed = 80.0f;
     
+    // Init weapon control
     _weaponCountDown = 0.f;
     _equipWeapon = false;
 }
@@ -78,6 +81,7 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
 
 - (void)update:(CCTime)delta {
     _bird.position = ccp(_bird.position.x + delta * _scrollSpeed, _bird.position.y);
+    if (_fire) _fire.position = _bird.position;
     _physicsNode.position = ccp(_physicsNode.position.x - (delta * _scrollSpeed), _physicsNode.position.y);
     
     // Loop the ground
@@ -110,7 +114,7 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     NSMutableArray *offScreenObstacles = nil;
     for (Obstacle *obstacle in _obstacles) {
         // Add weapon
-        if (_equipWeapon && _weaponCountDown < 3.f) {
+        if (_equipWeapon) {
             [obstacle loadSuperPower];
         }
         
@@ -145,8 +149,13 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     obstacle.position = ccp(previousObstacleXPosition + distanceBetweenObstacles, 0);
     [obstacle setupRandomPosition];
     
-    // Add weapon
-    if (_weaponCountDown > 5.f) {
+    // Remove weapon
+    if (_equipWeapon && _weaponCountDown > 3.f) {
+        NSLog(@"withdraw weapon at %f", _weaponCountDown);
+        _equipWeapon = false;
+        _weaponCountDown = 0.f;
+    }
+    else if (_weaponCountDown > 3.f) { // Add weapon
         NSLog(@"weapon is %f", _weaponCountDown);
         _equipWeapon = false;
         [obstacle loadWeapon];
@@ -157,6 +166,13 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     
     [_physicsNode addChild:obstacle];
     [_obstacles addObject:obstacle];
+}
+
+- (void) onFire {
+    _fire = (CCParticleSystem *)[CCBReader load:@"OnFire"];
+    _fire.autoRemoveOnFinish = true;
+    _fire.position = _bird.position;
+    [_bird.parent addChild:_fire];
 }
 
 - (BOOL)ccPhysicsCollisionPostSolve:(CCPhysicsCollisionPair *)pair bird:(CCNode *)bird level:(CCNode *)level {
@@ -174,6 +190,7 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
 - (BOOL)ccPhysicsCollisionBegin:(CCPhysicsCollisionPair *)pair bird:(CCNode *)bird weapon:(CCNode *)weapon {
     _weaponCountDown = 0.f;
     _equipWeapon = true;
+    [self onFire];
     NSLog(@"hit mushroom");
     return true;
 }

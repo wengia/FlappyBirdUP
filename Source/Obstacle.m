@@ -12,8 +12,8 @@
     CCNode *_topPipe;
     CCNode *_bottomPipe;
     CCNode *_greenMushroom;
-    
-    int _weapon;
+    CCNode *_redMushroom;
+    CCNode *_purpleMushroom;
 }
 
 #define ARC4RANDOM_MAX      0x100000000
@@ -33,6 +33,12 @@ static const CGFloat maximumYPositionTopPipe = maximumYPositionBottomPipe - pipe
     
     _greenMushroom.physicsBody.collisionType = @"weapon";
     _greenMushroom.physicsBody.sensor = true;
+    
+    _redMushroom.physicsBody.collisionType = @"weapon";
+    _redMushroom.physicsBody.sensor = true;
+    
+    _purpleMushroom.physicsBody.collisionType = @"level";
+    _purpleMushroom.physicsBody.sensor = true;
 }
 
 - (void)setupRandomPosition {
@@ -45,19 +51,31 @@ static const CGFloat maximumYPositionTopPipe = maximumYPositionBottomPipe - pipe
     
 }
 
-- (void) loadWeapon {
-    _weapon = 1 + arc4random() % 2;
-    NSLog(@"%d", _weapon);
+- (void) loadWeapon:(int)weapon {
+    if (weapon == 1) {
+        _greenMushroom.visible = true;
+        _greenMushroom.physicsBody.sensor = false;
+        _greenMushroom.position = ccp(_topPipe.position.x, _topPipe.position.y);
+    }
+    else if (weapon == 2) {
+        _redMushroom.visible = true;
+        _redMushroom.physicsBody.sensor = false;
+        _redMushroom.position = ccp(_topPipe.position.x, _topPipe.position.y);
+    }
+    else {
+        _purpleMushroom.visible = true;
+        _purpleMushroom.physicsBody.sensor = false;
+        _purpleMushroom.position = ccp(_topPipe.position.x, _topPipe.position.y);
+    }
     
-    _greenMushroom.visible = true;
-    _greenMushroom.physicsBody.sensor = false;
-    _greenMushroom.position = ccp(_topPipe.position.x, _topPipe.position.y);
 }
 
-- (void) loadSuperPower {
-    // if (_weapon == 1) {
+- (void) loadSuperPower:(int)weapon {
+    if (weapon == 1) {
         [self greenMushroomEffect];
-    //}
+    }
+    else
+        [self redMushroomEffect];
 }
 
 - (void) greenMushroomEffect { // Transparent bird
@@ -65,6 +83,27 @@ static const CGFloat maximumYPositionTopPipe = maximumYPositionBottomPipe - pipe
     _bottomPipe.physicsBody.sensor = true;
     _greenMushroom.physicsBody.sensor = true;
     _greenMushroom.visible = false;
+}
+
+- (void) redMushroomEffect { // Pipe explosion
+    _topPipe.physicsBody.sensor = true;
+    _bottomPipe.physicsBody.sensor = true;
+    _topPipe.visible = false;
+    _bottomPipe.visible = false;
+    
+    _redMushroom.physicsBody.sensor = true;
+    _redMushroom.visible = false;
+    
+    [self brokePipeEffect:true];
+    [self brokePipeEffect:false];
+    
+}
+
+- (void) brokePipeEffect:(bool) top {
+    CCParticleSystem *explosion = (CCParticleSystem *) [CCBReader load:@"Explosion"];
+    explosion.autoRemoveOnFinish = true;
+    explosion.position = (top) ? _topPipe.position : _bottomPipe.position;
+    [self addChild:explosion];
 }
 
 @end

@@ -15,6 +15,7 @@ static const CGFloat distanceBetweenObstacles = 160.f;
 typedef NS_ENUM(NSInteger, DrawingOrder) {
     DrawingOrderPipes,
     DrawingOrderGround,
+    DrawingOrderSuperpower,
     DrawingOrdeBird
 };
 
@@ -39,6 +40,7 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     
     NSTimeInterval _weaponCountDown;
     bool _equipWeapon;
+    int _weaponType;
     
     CCParticleSystem *_fire;
 }
@@ -68,6 +70,7 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     // Init weapon control
     _weaponCountDown = 0.f;
     _equipWeapon = false;
+    _weaponType = 0;
 }
 
 - (void)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event {
@@ -115,7 +118,7 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     for (Obstacle *obstacle in _obstacles) {
         // Add weapon
         if (_equipWeapon) {
-            [obstacle loadSuperPower];
+            [obstacle loadSuperPower:_weaponType];
         }
         
         CGPoint obstacleWorldPosition = [_physicsNode convertToWorldSpace:obstacle.position];
@@ -150,7 +153,7 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     [obstacle setupRandomPosition];
     
     // Remove weapon
-    if (_equipWeapon && _weaponCountDown > 3.f) {
+    if (_equipWeapon != 0 && _weaponCountDown > 3.f) {
         NSLog(@"withdraw weapon at %f", _weaponCountDown);
         _equipWeapon = false;
         _weaponCountDown = 0.f;
@@ -158,7 +161,11 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     else if (_weaponCountDown > 3.f) { // Add weapon
         NSLog(@"weapon is %f", _weaponCountDown);
         _equipWeapon = false;
-        [obstacle loadWeapon];
+        
+        _weaponType = 1 + arc4random() % 3; // Choose Weapon Type
+        NSLog(@"%d", _weaponType);
+        
+        [obstacle loadWeapon:_weaponType];
         _weaponCountDown = 0.f;
     }
     
@@ -171,11 +178,22 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
 - (void) onFire {
     _fire = (CCParticleSystem *)[CCBReader load:@"OnFire"];
     _fire.autoRemoveOnFinish = true;
-    _fire.position = _bird.position;
+    // _fire.position = _bird.position;
+    _fire.zOrder = DrawingOrderSuperpower;
     [_bird.parent addChild:_fire];
 }
 
+- (void) bomb {
+    CCParticleSystem *explosion = (CCParticleSystem *) [CCBReader load:@"Bomb"];
+    explosion.autoRemoveOnFinish = true;
+    explosion.position = _bird.position;
+    [_bird.parent addChild:explosion];
+}
+
 - (BOOL)ccPhysicsCollisionPostSolve:(CCPhysicsCollisionPair *)pair bird:(CCNode *)bird level:(CCNode *)level {
+    if (_weaponType==3) { // purple mushroom causes explosion
+        [self bomb];
+    }
     [self gameOver];
     return true;
 }

@@ -11,7 +11,7 @@
 @interface Obstacle : CCNode
 
 - (void)setupRandomPosition;
-- (void)loadWeapon;
-- (void)loadSuperPower;
+- (void)loadWeapon:(int)weapon;
+- (void)loadSuperPower:(int)weapon;
 
 @end

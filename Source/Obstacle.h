@@ -13,5 +13,6 @@
 - (void)setupRandomPosition;
 - (void)loadWeapon:(int)weapon;
 - (void)loadSuperPower:(int)weapon;
+- (void)hideMushroom:(CCNode *)mushroom;
 
 @end

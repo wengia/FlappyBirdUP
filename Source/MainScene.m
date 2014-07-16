@@ -9,8 +9,10 @@
 #import "MainScene.h"
 #import "Obstacle.h"
 
-static const CGFloat firstObstaclePosition = 280.f;
+static const CGFloat firstObstaclePosition = 200.f;
 static const CGFloat distanceBetweenObstacles = 160.f;
+static const CGFloat speed = 80.0f;
+static const CGFloat speedUpMultiplier = 1.5f;
 
 typedef NS_ENUM(NSInteger, DrawingOrder) {
     DrawingOrderPipes,
@@ -51,7 +53,7 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     
     // Put ground to the front
     for (CCNode *ground in _grounds) {
-        ground.physicsBody.collisionType = @"level";
+        ground.physicsBody.collisionType = @"dead";
         ground.zOrder = DrawingOrderGround;
     }
     _physicsNode.collisionDelegate = self;
@@ -65,7 +67,7 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     [self spawnNewObstacle];
     
     // Init scrolling speed
-    _scrollSpeed = 80.0f;
+    _scrollSpeed = speed;
     
     // Init weapon control
     _weaponCountDown = 0.f;
@@ -83,9 +85,17 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
 }
 
 - (void)update:(CCTime)delta {
-    _bird.position = ccp(_bird.position.x + delta * _scrollSpeed, _bird.position.y);
+    // Change scrollSpeed according to the weaponType
+    CGFloat tmpSpeed;
+    if (_equipWeapon && _weaponType == 4) {
+        tmpSpeed = _scrollSpeed * speedUpMultiplier;
+    }
+    else
+        tmpSpeed = _scrollSpeed;
+    
+    _bird.position = ccp(_bird.position.x + delta * tmpSpeed, _bird.position.y);
     if (_fire) _fire.position = _bird.position;
-    _physicsNode.position = ccp(_physicsNode.position.x - (delta * _scrollSpeed), _physicsNode.position.y);
+    _physicsNode.position = ccp(_physicsNode.position.x - (delta * tmpSpeed), _physicsNode.position.y);
     
     // Loop the ground
     for (CCNode *ground in _grounds) {
@@ -116,11 +126,6 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     // Add Obstacle
     NSMutableArray *offScreenObstacles = nil;
     for (Obstacle *obstacle in _obstacles) {
-        // Add weapon
-        if (_equipWeapon) {
-            [obstacle loadSuperPower:_weaponType];
-        }
-        
         CGPoint obstacleWorldPosition = [_physicsNode convertToWorldSpace:obstacle.position];
         CGPoint obstacleScreenPosition = [self convertToNodeSpace:obstacleWorldPosition];
         if (obstacleScreenPosition.x < -obstacle.contentSize.width) {
@@ -152,8 +157,8 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     obstacle.position = ccp(previousObstacleXPosition + distanceBetweenObstacles, 0);
     [obstacle setupRandomPosition];
     
-    // Remove weapon
-    if (_equipWeapon != 0 && _weaponCountDown > 3.f) {
+    // Weapon
+    if (_equipWeapon && _weaponCountDown > 5.f) { // Remove weapon
         NSLog(@"withdraw weapon at %f", _weaponCountDown);
         _equipWeapon = false;
         _weaponCountDown = 0.f;
@@ -162,7 +167,7 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
         NSLog(@"weapon is %f", _weaponCountDown);
         _equipWeapon = false;
         
-        _weaponType = 1 + arc4random() % 3; // Choose Weapon Type
+        _weaponType = 1 + arc4random() % 5; // Choose Weapon Type
         NSLog(@"%d", _weaponType);
         
         [obstacle loadWeapon:_weaponType];
@@ -183,18 +188,17 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     [_bird.parent addChild:_fire];
 }
 
-- (void) bomb {
-    CCParticleSystem *explosion = (CCParticleSystem *) [CCBReader load:@"Bomb"];
-    explosion.autoRemoveOnFinish = true;
-    explosion.position = _bird.position;
-    [_bird.parent addChild:explosion];
+- (BOOL)ccPhysicsCollisionPostSolve:(CCPhysicsCollisionPair *)pair bird:(CCNode *)bird dead:(CCNode *)dead {
+    [self gameOver];
+    return true;
 }
 
-- (BOOL)ccPhysicsCollisionPostSolve:(CCPhysicsCollisionPair *)pair bird:(CCNode *)bird level:(CCNode *)level {
-    if (_weaponType==3) { // purple mushroom causes explosion
-        [self bomb];
+- (BOOL)ccPhysicsCollisionBegin:(CCPhysicsCollisionPair *)pair bird:(CCNode *)bird level:(CCNode *)pipe {
+    if (_equipWeapon && _weaponType < 4) {
+        [(Obstacle *)pipe.parent loadSuperPower:_weaponType];
     }
-    [self gameOver];
+    else
+        [self gameOver];
     return true;
 }
 
@@ -209,6 +213,11 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     _weaponCountDown = 0.f;
     _equipWeapon = true;
     [self onFire];
+    if (_weaponType==5) { // purple mushroom will call to dead
+        [self gameOver];
+    }
+    [(Obstacle *)weapon.parent hideMushroom:weapon];
+    
     NSLog(@"hit mushroom");
     return true;
 }

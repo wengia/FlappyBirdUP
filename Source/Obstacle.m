@@ -41,6 +41,9 @@ static const CGFloat maximumYPositionTopPipe = maximumYPositionBottomPipe - pipe
     _topPipe.physicsBody.sensor = true;
     _bottomPipe.physicsBody.sensor = true;
     
+    _topPipeHigh.physicsBody.sensor = true;
+    _bottomPipeLow.physicsBody.sensor = true;
+    
     _blueMushroom.physicsBody.collisionType = @"weapon";
     _blueMushroom.physicsBody.sensor = true;
     
@@ -141,6 +144,9 @@ static const CGFloat maximumYPositionTopPipe = maximumYPositionBottomPipe - pipe
     _bottomPipe.visible = false;
     _topPipeHigh.visible = true;
     _bottomPipeLow.visible = true;
+    
+    _topPipeHigh.physicsBody.sensor = false;
+    _bottomPipeLow.physicsBody.sensor = false;
 }
 
 - (void) purpleMushroomEffect { // Dead! Mushroom explosion

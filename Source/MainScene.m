@@ -12,7 +12,7 @@
 static const CGFloat firstObstaclePosition = 200.f;
 static const CGFloat distanceBetweenObstacles = 160.f;
 static const CGFloat speed = 80.0f;
-static const CGFloat speedUpMultiplier = 1.5f;
+static const CGFloat speedUpMultiplier = 2.0f;
 
 typedef NS_ENUM(NSInteger, DrawingOrder) {
     DrawingOrderPipes,
@@ -158,12 +158,12 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     [obstacle setupRandomPosition];
     
     // Weapon
-    if (_equipWeapon && _weaponCountDown > 5.f) { // Remove weapon
+    if (_equipWeapon && _weaponCountDown > 7.5f) { // Remove weapon
         NSLog(@"withdraw weapon at %f", _weaponCountDown);
         _equipWeapon = false;
         _weaponCountDown = 0.f;
     }
-    else if (_weaponCountDown > 3.f) { // Add weapon
+    else if (_weaponCountDown > 4.f) { // Add weapon
         NSLog(@"weapon is %f", _weaponCountDown);
         _equipWeapon = false;
         

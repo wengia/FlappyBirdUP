@@ -45,6 +45,11 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     int _weaponType;
     
     CCParticleSystem *_fire;
+    
+    //Instruction
+    CCLabelTTF *_instruction;
+    Boolean _showInstr[5];
+    NSArray *_instr;
 }
 
 - (void)didLoadFromCCB {
@@ -73,6 +78,16 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     _weaponCountDown = 0.f;
     _equipWeapon = false;
     _weaponType = 0;
+    
+    // Init instruction
+    for (int i = 0; i < 5; i++) {
+        _showInstr[i] = true;
+    }
+    _instr = @[@"Invisible Bird!",
+               @"Hit and break the pipes!",
+               @"Hit and shrink the pipes!",
+               @"Bad luck, fly fast!",
+               @"Bad luck, you dead! LOL"];
 }
 
 - (void)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event {
@@ -158,14 +173,14 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     [obstacle setupRandomPosition];
     
     // Weapon
-    if (_equipWeapon && _weaponCountDown > 7.5f) { // Remove weapon
+    if (_equipWeapon && _weaponCountDown > 4.f) { // Remove weapon
         NSLog(@"withdraw weapon at %f", _weaponCountDown);
         _equipWeapon = false;
         _weaponCountDown = 0.f;
+        _instruction.visible = false;
     }
     else if (_weaponCountDown > 4.f) { // Add weapon
         NSLog(@"weapon is %f", _weaponCountDown);
-        _equipWeapon = false;
         
         _weaponType = 1 + arc4random() % 5; // Choose Weapon Type
         NSLog(@"%d", _weaponType);
@@ -210,6 +225,12 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
 }
 
 - (BOOL)ccPhysicsCollisionBegin:(CCPhysicsCollisionPair *)pair bird:(CCNode *)bird weapon:(CCNode *)weapon {
+    if (_showInstr[_weaponType - 1]) {
+        _instruction.string = _instr[_weaponType - 1];
+        _instruction.visible = true;
+        _showInstr[_weaponType - 1] = false;
+    }
+    
     _weaponCountDown = 0.f;
     _equipWeapon = true;
     [self onFire];

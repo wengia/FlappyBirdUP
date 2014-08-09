@@ -263,6 +263,18 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     [(ScoreHistory *)_history resetHistory];
 }
 
+- (void)pause {
+    static BOOL inPause = false;
+    if (!inPause) {
+        [[CCDirector sharedDirector] pause];
+        inPause = !inPause;
+    }
+    else {
+        [[CCDirector sharedDirector] resume];
+        inPause = !inPause;
+    }
+}
+
 - (void)gameOver {
     if (!_gameOver) {
         _scrollSpeed = 0.f;

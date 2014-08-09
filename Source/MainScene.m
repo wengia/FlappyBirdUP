@@ -8,6 +8,7 @@
 
 #import "MainScene.h"
 #import "Obstacle.h"
+#import "ScoreHistory.h"
 
 static const CGFloat firstObstaclePosition = 200.f;
 static const CGFloat distanceBetweenObstacles = 160.f;
@@ -33,6 +34,7 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     NSMutableArray *_obstacles;
     
     CCButton *_restartButton;
+    CCButton *_clearButton;
     
     bool _gameOver;
     CGFloat _scrollSpeed;
@@ -50,6 +52,10 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     CCLabelTTF *_instruction;
     Boolean _showInstr[5];
     NSArray *_instr;
+    
+    //Game Over
+    CCNode *_history;
+
 }
 
 - (void)didLoadFromCCB {
@@ -88,6 +94,11 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
                @"Hit and shrink the pipes!",
                @"Bad luck, fly fast!",
                @"Bad luck, you dead! LOL"];
+    
+    // Game Over Setting
+    _history.visible = false;
+    _restartButton.visible = false;
+    _clearButton.visible = false;
 }
 
 - (void)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event {
@@ -183,6 +194,7 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
         NSLog(@"weapon is %f", _weaponCountDown);
         
         _weaponType = 1 + arc4random() % 5; // Choose Weapon Type
+        _weaponType = 2;
         NSLog(@"%d", _weaponType);
         
         [obstacle loadWeapon:_weaponType];
@@ -248,11 +260,16 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
     [[CCDirector sharedDirector] replaceScene:scene];
 }
 
+- (void)clear {
+    [(ScoreHistory *)_history resetHistory];
+}
+
 - (void)gameOver {
     if (!_gameOver) {
         _scrollSpeed = 0.f;
         _gameOver = TRUE;
         _restartButton.visible = TRUE;
+        _clearButton.visible = true;
         _bird.rotation = 90.f;
         _bird.physicsBody.allowsRotation = FALSE;
         [_bird stopAllActions];
@@ -261,6 +278,10 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
         CCActionSequence *shakeSequence = [CCActionSequence actionWithArray:@[moveBy, reverseMovement]];
         CCActionEaseBounce *bounce = [CCActionEaseBounce actionWithAction:shakeSequence];
         [self runAction:bounce];
+        
+        [(ScoreHistory *)_history setCurrent:_points];
+        [(ScoreHistory *)_history setHistory:_points];
+        _history.visible = true;
     }
 }
 

@@ -10,6 +10,7 @@
 		8392007A18EE8E3300B6C429 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8392007918EE8E3300B6C429 /* GLKit.framework */; };
 		A56031C519636459000C17B6 /* Obstacle.m in Sources */ = {isa = PBXBuildFile; fileRef = A56031C419636459000C17B6 /* Obstacle.m */; };
 		A56031C919637B07000C17B6 /* Goal.m in Sources */ = {isa = PBXBuildFile; fileRef = A56031C819637B07000C17B6 /* Goal.m */; };
+		A5D41A691995F0440038B028 /* ScoreHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D41A681995F0440038B028 /* ScoreHistory.m */; };
 		B71F5911188484E7003F4D28 /* iPad-old.png in Resources */ = {isa = PBXBuildFile; fileRef = B71F5907188484E7003F4D28 /* iPad-old.png */; };
 		B71F5912188484E7003F4D28 /* iPad-old@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B71F5908188484E7003F4D28 /* iPad-old@2x.png */; };
 		B71F5913188484E7003F4D28 /* iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = B71F5909188484E7003F4D28 /* iPad.png */; };
@@ -63,6 +64,8 @@
 		A56031C419636459000C17B6 /* Obstacle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Obstacle.m; path = Source/Obstacle.m; sourceTree = "<group>"; };
 		A56031C719637B07000C17B6 /* Goal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Goal.h; path = Source/Goal.h; sourceTree = "<group>"; };
 		A56031C819637B07000C17B6 /* Goal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Goal.m; path = Source/Goal.m; sourceTree = "<group>"; };
+		A5D41A671995F0440038B028 /* ScoreHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScoreHistory.h; path = Source/ScoreHistory.h; sourceTree = "<group>"; };
+		A5D41A681995F0440038B028 /* ScoreHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ScoreHistory.m; path = Source/ScoreHistory.m; sourceTree = "<group>"; };
 		B71F5907188484E7003F4D28 /* iPad-old.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iPad-old.png"; path = "Icons/iPad-old.png"; sourceTree = "<group>"; };
 		B71F5908188484E7003F4D28 /* iPad-old@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iPad-old@2x.png"; path = "Icons/iPad-old@2x.png"; sourceTree = "<group>"; };
 		B71F5909188484E7003F4D28 /* iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iPad.png; path = Icons/iPad.png; sourceTree = "<group>"; };
@@ -139,6 +142,8 @@
 				A56031C419636459000C17B6 /* Obstacle.m */,
 				A56031C719637B07000C17B6 /* Goal.h */,
 				A56031C819637B07000C17B6 /* Goal.m */,
+				A5D41A671995F0440038B028 /* ScoreHistory.h */,
+				A5D41A681995F0440038B028 /* ScoreHistory.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -355,6 +360,7 @@
 				B7378994180767190076A88C /* MainScene.m in Sources */,
 				A56031C519636459000C17B6 /* Obstacle.m in Sources */,
 				B73789871807631A0076A88C /* main.m in Sources */,
+				A5D41A691995F0440038B028 /* ScoreHistory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

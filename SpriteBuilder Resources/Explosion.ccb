@@ -136,7 +136,7 @@
 				<key>type</key>
 				<string>Integer</string>
 				<key>value</key>
-				<integer>50</integer>
+				<integer>1000</integer>
 			</dict>
 			<dict>
 				<key>name</key>
@@ -156,8 +156,8 @@
 				<string>FloatVar</string>
 				<key>value</key>
 				<array>
-					<real>10</real>
-					<real>3</real>
+					<real>30</real>
+					<real>5</real>
 				</array>
 			</dict>
 			<dict>
@@ -167,8 +167,8 @@
 				<string>FloatVar</string>
 				<key>value</key>
 				<array>
-					<real>2</real>
-					<real>0.0</real>
+					<real>30</real>
+					<real>3</real>
 				</array>
 			</dict>
 			<dict>
@@ -305,8 +305,8 @@
 				<string>FloatVar</string>
 				<key>value</key>
 				<array>
-					<real>10</real>
-					<real>5</real>
+					<real>0.0</real>
+					<real>0.0</real>
 				</array>
 			</dict>
 			<dict>
@@ -315,7 +315,7 @@
 				<key>type</key>
 				<string>Texture</string>
 				<key>value</key>
-				<string>ccbResources/ccbParticleFire.png</string>
+				<string>FlappyFlyArtPack/pipe_top.png</string>
 			</dict>
 		</array>
 		<key>selected</key>

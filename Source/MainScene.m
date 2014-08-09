@@ -194,7 +194,6 @@ typedef NS_ENUM(NSInteger, DrawingOrder) {
         NSLog(@"weapon is %f", _weaponCountDown);
         
         _weaponType = 1 + arc4random() % 5; // Choose Weapon Type
-        _weaponType = 2;
         NSLog(@"%d", _weaponType);
         
         [obstacle loadWeapon:_weaponType];

@@ -39,6 +39,7 @@
 
 - (void)resetHistory {
     [_records setInteger:0 forKey:@"highestScore"];
+    _bestScore.string = @"0";
 }
 
 @end
